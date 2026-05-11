@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/teacher-base :: layout(~{::title}, ~{::content})">
+<head>
+    <title>Đánh giá năng lực & Cấp thiết bị</title>
+</head>
+<body>
+<div th:fragment="content">
+    <style>
+        .eval-card { border-radius: 24px; border: 1px solid #e2e8f0; background: white; }
+        .rating-box { cursor: pointer; transition: 0.2s; }
+        .rating-box:hover { border-color: #4f46e5 !important; background: #f5f3ff; }
+
+        /* CSS Ẩn checkbox mặc định, biến label thành thẻ chọn */
+        .eq-checkbox { display: none; }
+        .eq-label { border: 2px solid #e2e8f0; border-radius: 14px; padding: 15px; cursor: pointer; transition: all 0.2s; }
+        .eq-checkbox:checked + .eq-label {
+            border-color: #4f46e5;
+            background-color: #f5f3ff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+        .eq-checkbox:checked + .eq-label .icon-check { color: #4f46e5 !important; opacity: 1 !important; }
+    </style>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="eval-card shadow-sm p-4 p-md-5">
+
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">Báo cáo đánh giá ca tư vấn</h4>
+                        <p class="text-muted small mb-0">Mã ca: #<span th:text="${mentoringSession.id}"></span> | Sinh viên: <strong th:text="${mentoringSession.student.profile.fullName}">Nguyễn Văn A</strong></p>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                        <i class="bi bi-file-earmark-check fs-4"></i>
+                    </div>
+                </div>
+
+                <form th:action="@{/teacher/mentoring/evaluate/{id}(id=${mentoringSession.id})}" method="post">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Đánh giá chung (Điểm 1-5)</label>
+                        <select name="rating" class="form-select form-select-lg border-light bg-light rounded-3 shadow-sm" required>
+                            <option value="5">⭐⭐⭐⭐⭐ - Xuất sắc</option>
+                            <option value="4">⭐⭐⭐⭐ - Tốt</option>
+                            <option value="3" selected>⭐⭐⭐ - Đạt yêu cầu</option>
+                            <option value="2">⭐⭐ - Cần cố gắng thêm</option>
+                            <option value="1">⭐ - Chưa đạt</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Nhận xét chi tiết năng lực</label>
+                        <textarea name="comment" class="form-control border-light bg-light rounded-4 p-3 shadow-sm" rows="4"
+                                  placeholder="Thầy/Cô hãy nhập ghi chú tiến độ đồ án, thái độ hoặc phần kiến thức sinh viên còn yếu..." required></textarea>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold small text-uppercase text-muted mb-3 d-flex justify-content-between">
+                            <span>Chỉ định thiết bị / Tài liệu (Tùy chọn)</span>
+                            <span class="text-primary"><i class="bi bi-laptop"></i> Kho lưu trữ</span>
+                        </label>
+
+                        <div class="row g-3">
+                            <div class="col-md-6" th:each="eq : ${equipments}">
+                                <input type="checkbox" class="eq-checkbox" name="equipmentIds"
+                                       th:id="'eq-' + ${eq.id}" th:value="${eq.id}">
+                                <label class="eq-label w-100 h-100 d-flex justify-content-between align-items-center" th:for="'eq-' + ${eq.id}">
+                                    <div>
+                                        <div class="fw-bold text-dark mb-1" th:text="${eq.name}">Oscilloscope GDS</div>
+                                        <div class="text-muted" style="font-size: 0.7rem;">
+                                            <i class="bi bi-geo-alt me-1"></i> <span th:text="${eq.labRoom}">Phòng Lab</span>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-check-circle-fill fs-4 text-muted opacity-25 icon-check transition-all"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                        <a th:href="@{/teacher/dashboard}" class="btn btn-light rounded-pill px-4 fw-bold shadow-sm">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">
+                            <i class="bi bi-floppy me-2"></i> Lưu đánh giá & Hoàn thành
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

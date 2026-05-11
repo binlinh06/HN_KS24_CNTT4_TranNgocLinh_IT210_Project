@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+
+<head>
+    <title th:text="${equipment.id == null ? 'Thêm Thiết Bị Mới - Admin Pro' : 'Chỉnh Sửa Thiết Bị - Admin Pro'}"></title>
+    <style>
+        .form-card { max-width: 800px; margin: 0 auto; }
+        .form-label { font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
+        .input-group-text { background-color: #f8fafc; border-right: none; color: #64748b; }
+        .form-control, .form-select { border-left: none; }
+        .form-control:focus, .form-select:focus { box-shadow: none; border-color: #dee2e6; }
+        .input-group:focus-within {
+            box-shadow: 0 0 0 0.25rem rgba(32, 178, 170, 0.25);
+            border-radius: 0.375rem;
+        }
+        .input-group:focus-within .input-group-text,
+        .input-group:focus-within .form-control { border-color: var(--primary); }
+
+        /* Chỉnh lại bo góc khi bị lỗi validate */
+        .is-invalid { border-left: 1px solid #dc3545 !important; }
+    </style>
+</head>
+
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0">
+            <i class="bi bi-pc-display me-2 text-primary"></i>
+            <span th:text="${equipment.id == null ? 'Thêm Thiết Bị Mới' : 'Cập Nhật Thiết Bị'}"></span>
+        </h2>
+        <a th:href="@{/admin/equipment}" class="btn btn-light border shadow-sm px-4 py-2 rounded-3">
+            <i class="bi bi-arrow-left me-2"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="card form-card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+            <h5 class="mb-0 fw-semibold text-center text-secondary">
+                <i class="bi bi-info-circle me-1"></i>
+                <span th:text="${equipment.id == null ? 'Điền thông tin chi tiết thiết bị' : 'Chỉnh sửa thông tin thiết bị'}"></span>
+            </h5>
+        </div>
+
+        <div class="card-body p-5 pt-4">
+            <form th:action="@{/admin/equipment/save}" th:object="${equipment}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label">Tên thiết bị <span class="text-danger">*</span></label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text rounded-start-3"><i class="bi bi-laptop"></i></span>
+                            <input type="text" class="form-control form-control-lg rounded-end-3"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                   th:field="*{name}" placeholder="Ví dụ: Máy hiện sóng Oscilloscope GDS-1202B">
+                            <div class="invalid-feedback fw-medium mt-2" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Số lượng <span class="text-danger">*</span></label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text rounded-start-3"><i class="bi bi-box-seam"></i></span>
+                            <input type="number" class="form-control form-control-lg rounded-end-3"
+                                   th:classappend="${#fields.hasErrors('quantity')} ? 'is-invalid' : ''"
+                                   th:field="*{quantity}" placeholder="Nhập số lượng">
+                            <div class="invalid-feedback fw-medium mt-2" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Trạng thái hiện tại</label>
+                        <select class="form-select form-select-lg rounded-3" th:field="*{status}">
+                            <option value="AVAILABLE">🟢 Sẵn sàng sử dụng</option>
+                            <option value="IN_USE">🟡 Đang được mượn</option>
+                            <option value="MAINTENANCE">🟠 Đang bảo trì</option>
+                            <option value="BROKEN">🔴 Đã hỏng</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Phân bổ cho Khoa/Ngành <span class="text-danger">*</span></label>
+                        <select class="form-select form-select-lg rounded-3"
+                                th:classappend="${#fields.hasErrors('departmentId')} ? 'is-invalid' : ''"
+                                th:field="*{departmentId}">
+                            <option value="">-- Chọn Khoa/Ngành --</option>
+                            <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+                        </select>
+                        <div class="invalid-feedback fw-medium mt-2" th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Thuộc loại phòng Lab <span class="text-danger">*</span></label>
+                        <select class="form-select form-select-lg rounded-3"
+                                th:classappend="${#fields.hasErrors('labTypeId')} ? 'is-invalid' : ''"
+                                th:field="*{labTypeId}">
+                            <option value="">-- Chọn loại phòng --</option>
+                            <option th:each="l : ${labTypes}" th:value="${l.id}" th:text="${l.name}"></option>
+                        </select>
+                        <div class="invalid-feedback fw-medium mt-2" th:if="${#fields.hasErrors('labTypeId')}" th:errors="*{labTypeId}"></div>
+                    </div>
+                </div>
+
+                <hr class="my-5 border-light">
+
+                <div class="d-flex justify-content-end gap-3">
+                    <a th:href="@{/admin/equipment}" class="btn btn-light border px-5 py-3 rounded-3 fw-medium">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-primary px-5 py-3 rounded-3 fw-semibold shadow-sm">
+                        <i class="bi bi-cloud-arrow-up-fill me-2"></i>
+                        <span th:text="${equipment.id == null ? 'Lưu Thiết Bị Mới' : 'Cập Nhật Thay Đổi'}"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

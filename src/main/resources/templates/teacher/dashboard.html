@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/teacher-base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Bảng điều khiển Giảng viên | Mentor Portal</title>
+</head>
+<body>
+<div th:fragment="content">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --border-soft: #e2e8f0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* --- BANNER "VIP PRO" --- */
+        .welcome-banner {
+            background: var(--primary-gradient);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            color: white !important;
+            box-shadow: 0 15px 35px -5px rgba(79, 70, 229, 0.25);
+        }
+
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            top: -20%;
+            right: -5%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-banner .text-muted {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* --- STAT CARDS --- */
+        .stat-card-premium {
+            background: white;
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .stat-card-premium:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            border-color: #c7d2fe;
+        }
+
+        .icon-box {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            transition: 0.3s;
+        }
+
+        /* --- TABLE DESIGN --- */
+        .glass-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .table tbody td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .student-avatar {
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            object-fit: cover;
+        }
+
+        /* --- BADGES & BUTTONS --- */
+        .badge-soft {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-soft-warning { background: #fffbeb; color: #b45309; border: 1px solid #fef3c7;}
+        .badge-soft-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7;}
+
+        .btn-action {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .btn-approve:hover { background: #10b981; color: white; transform: scale(1.05); }
+        .btn-reject:hover { background: #ef4444; color: white; transform: scale(1.05); }
+
+        .btn-evaluate {
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 6px 16px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-evaluate:hover {
+            background: #1e293b;
+            border-color: #1e293b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.2);
+        }
+
+        /* Căn chỉnh lại ghi chú để không bị vỡ layout */
+        .note-container {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    </style>
+
+    <div class="welcome-banner mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 rounded-pill fw-medium" style="letter-spacing: 0.5px;">
+                    <i class="bi bi-star-fill text-warning me-1"></i> Cố vấn học tập chuyên nghiệp
+                </span>
+                <h1 class="display-5 fw-bold mb-2">Xin chào, <span th:text="${teacherName}">Thầy/Cô</span></h1>
+                <p class="fs-5 opacity-75 mb-0">Hôm nay Thầy/Cô có <span class="fw-bold text-warning" th:text="${pendingCount}">3</span> yêu cầu mới cần phê duyệt.</p>
+            </div>
+            <div class="col-md-4 text-end d-none d-md-block">
+                <i class="bi bi-person-workspace" style="font-size: 8rem; opacity: 0.15; transform: rotate(-5deg);"></i>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4" th:each="stat : ${stats}">
+            <div class="stat-card-premium shadow-sm h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div th:class="'icon-box bg-' + ${stat.color} + ' bg-opacity-10 text-' + ${stat.color}">
+                        <i th:class="'bi ' + ${stat.icon}"></i>
+                    </div>
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill" style="font-size: 0.65rem;">
+                        <i class="bi bi-arrow-up-short"></i>12%
+                    </span>
+                </div>
+                <div>
+                    <h6 class="text-muted fw-semibold small text-uppercase mb-1" th:text="${stat.label}">Tiêu đề</h6>
+                    <h2 class="fw-bold mb-0 text-dark" th:text="${stat.value}">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card shadow-sm mb-5">
+        <div class="px-4 py-4 border-bottom d-flex justify-content-between align-items-center bg-white">
+            <div>
+                <h5 class="fw-bold text-dark mb-1">Danh sách yêu cầu</h5>
+                <p class="text-muted small mb-0">Quản lý các buổi hẹn cố vấn từ sinh viên</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light border btn-sm rounded-3 px-3 fw-medium text-secondary">
+                    <i class="bi bi-filter me-1"></i> Lọc
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                <tr>
+                    <th class="ps-4">Sinh viên</th>
+                    <th>Lịch hẹn</th>
+                    <th>Mục đích / Ghi chú</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center pe-4">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="appt : ${sessions}">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                            <img th:src="'https://ui-avatars.com/api/?name=' + ${appt.student.profile != null ? appt.student.profile.fullName : appt.student.username} + '&background=4f46e5&color=fff&bold=true'"
+                                 class="student-avatar rounded-circle me-3" width="42" height="42">
+                            <div>
+                                <div class="fw-bold text-dark small" th:text="${appt.student.profile != null ? appt.student.profile.fullName : appt.student.username}">Họ Tên</div>
+                                <div class="text-muted" style="font-size: 0.7rem;" th:text="${appt.student.username}">MSSV</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 text-primary bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark small" th:text="${#temporals.format(appt.startTime, 'HH:mm')}">08:00</div>
+                                <div class="text-muted" style="font-size: 0.7rem;" th:text="${#temporals.format(appt.startTime, 'dd/MM/yyyy')}">10/05/2026</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="bg-light p-2 rounded-3 text-muted small note-container"
+                             th:text="${appt.note}" data-bs-toggle="tooltip" th:title="${appt.note}">Ghi chú...</div>
+                    </td>
+                    <td>
+                        <span th:if="${appt.status.name() == 'PENDING'}" class="badge-soft badge-soft-warning">
+                            <i class="bi bi-hourglass-split"></i> Chờ duyệt
+                        </span>
+                        <span th:if="${appt.status.name() == 'APPROVED'}" class="badge-soft badge-soft-success">
+                            <i class="bi bi-check2-all"></i> Đã duyệt
+                        </span>
+                    </td>
+                    <td class="text-center pe-4">
+                        <div th:if="${appt.status.name() == 'PENDING'}" class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/teacher/mentoring/evaluate/{id}(id=${appt.id})}"
+                               class="btn btn-evaluate d-inline-flex align-items-center bg-primary border-primary">
+                                <i class="bi bi-pencil-square me-2"></i> Tiếp nhận & Đánh giá
+                            </a>
+                            <a th:href="@{/teacher/mentoring/reject/{id}(id=${appt.id})}" class="btn-action btn-reject" title="Từ chối">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        </div>
+
+                        <div th:if="${appt.status.name() == 'APPROVED'}">
+                            <a th:href="@{/teacher/mentoring/evaluate/{id}(id=${appt.id})}" class="btn btn-evaluate d-inline-flex align-items-center">
+                                <i class="bi bi-pencil-square me-2"></i> Ghi chú đánh giá
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-5">
+            <div class="mb-3 d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                <i class="bi bi-check2-circle text-success opacity-50" style="font-size: 2.5rem;"></i>
+            </div>
+            <h6 class="fw-bold text-dark">Thật thảnh thơi!</h6>
+            <p class="text-muted small mb-0">Thầy/Cô đã xử lý xong mọi yêu cầu hiện tại.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
+</body>
+</html>

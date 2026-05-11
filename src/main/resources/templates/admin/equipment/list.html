@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+
+<head>
+    <title>Quản lý Thiết bị - Admin</title>
+</head>
+
+<body>
+<div th:fragment="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0">Quản lý Thiết bị Thực hành</h2>
+            <p class="text-muted mb-0 mt-1">Danh sách toàn bộ thiết bị đang lưu trữ trong hệ thống</p>
+        </div>
+        <a th:href="@{/admin/equipment/create}" class="btn btn-primary px-4 py-2 shadow-sm rounded-3">
+            <i class="bi bi-plus-lg me-2"></i> Thêm thiết bị mới
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3">ID</th>
+                        <th class="py-3">Tên thiết bị</th>
+                        <th class="py-3">Khoa / Ngành</th>
+                        <th class="py-3">Loại Lab</th>
+                        <th class="py-3">Số lượng</th>
+                        <th class="py-3">Trạng thái</th>
+                        <th class="text-end pe-4 py-3">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${equipments}">
+                        <td class="ps-4"><strong th:text="${'#' + e.id}"></strong></td>
+
+                        <td class="fw-medium text-dark" th:text="${e.name}"></td>
+
+                        <td th:text="${e.department?.name ?: 'Chưa phân bổ'}"></td>
+
+                        <td th:text="${e.labType?.name ?: 'Chưa phân loại'}"></td>
+
+                        <td>
+                            <span class="badge bg-light text-dark border px-2 py-1" th:text="${e.quantity}"></span>
+                        </td>
+
+                        <td>
+    <span class="badge px-3 py-2 rounded-pill"
+          th:classappend="${'AVAILABLE'.equals(e.status)} ? 'bg-info bg-opacity-10 text-info border border-info' :
+                         (${'IN_USE'.equals(e.status)} ? 'bg-warning bg-opacity-10 text-warning border border-warning' :
+                         (${'MAINTENANCE'.equals(e.status)} ? 'bg-success bg-opacity-10 text-success border border-success' :
+                         'bg-danger bg-opacity-10 text-danger border border-danger'))"
+          th:text="${'AVAILABLE'.equals(e.status)} ? 'Sẵn sàng' :
+                  (${'IN_USE'.equals(e.status)} ? 'Đang mượn' :
+                  (${'MAINTENANCE'.equals(e.status)} ? 'Bảo trì' : 'Hỏng'))">
+    </span>
+                        </td>
+
+                        <td class="text-end pe-4">
+                            <a th:href="@{/admin/equipment/edit/{id}(id=${e.id})}"
+                               class="btn btn-sm btn-light text-primary border shadow-sm me-2">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a th:href="@{/admin/equipment/delete/{id}(id=${e.id})}"
+                               class="btn btn-sm btn-light text-danger border shadow-sm"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa thiết bị này không? Thao tác này không thể hoàn tác.')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(equipments)}">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
+                            <h6 class="fw-medium">Chưa có thiết bị nào</h6>
+                            <p class="small mb-0">Hãy bấm "Thêm thiết bị mới" để bắt đầu cập nhật dữ liệu.</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

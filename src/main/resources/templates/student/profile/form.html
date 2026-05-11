@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/student-base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Hồ sơ cá nhân | Student Portal</title>
+</head>
+<body>
+
+<div th:fragment="content">
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, #20B2AA 0%, #0F766E 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-header::after {
+            content: "\F4E1"; /* Icon của Bootstrap */
+            font-family: bootstrap-icons;
+            position: absolute;
+            font-size: 15rem;
+            color: rgba(255, 255, 255, 0.05);
+            top: -40px;
+            right: 0px;
+            transform: rotate(-10deg);
+            pointer-events: none;
+        }
+        .avatar-wrapper {
+            width: 100px;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #0F766E;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin: -60px auto 20px;
+            position: relative;
+            z-index: 2;
+            border: 5px solid #f8f9fa;
+        }
+        .form-control-custom {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 14px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .form-control-custom:focus {
+            background-color: #fff;
+            border-color: #20B2AA;
+            box-shadow: 0 0 0 4px rgba(32, 178, 170, 0.1);
+        }
+    </style>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <div th:if="${success}" class="alert alert-success bg-success bg-opacity-10 border-success border-opacity-25 text-success rounded-4 d-flex align-items-center mb-4 p-3 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                <div th:text="${success}" class="fw-medium"></div>
+            </div>
+            <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger rounded-4 d-flex align-items-center mb-4 p-3 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                <div th:text="${error}" class="fw-medium"></div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mt-4 mb-5 bg-white">
+
+                <div class="profile-header text-center text-white">
+                    <h3 class="fw-bold mb-1">Cập Nhật Hồ Sơ</h3>
+                    <p class="mb-0 opacity-75">Quản lý thông tin cá nhân của bạn</p>
+                </div>
+
+                <div class="avatar-wrapper">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+
+                <div class="card-body px-4 px-md-5 pb-5 pt-2">
+
+                    <form th:action="@{/student/profile/update}" th:object="${profile}" method="post">
+
+                        <input type="hidden" th:field="*{userId}" />
+
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-person-vcard text-primary me-1"></i> Họ và tên đầy đủ
+                                </label>
+                                <input type="text" class="form-control form-control-custom"
+                                       th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'"
+                                       th:field="*{fullName}" placeholder="Nhập họ tên của bạn..." />
+                                <div class="invalid-feedback fw-bold" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Lỗi họ tên</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-calendar-event text-info me-1"></i> Ngày sinh
+                                </label>
+                                <input type="date" class="form-control form-control-custom"
+                                       th:classappend="${#fields.hasErrors('dob')} ? 'is-invalid'"
+                                       th:field="*{dob}" />
+                                <div class="invalid-feedback fw-bold" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}">Lỗi ngày sinh</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-telephone text-success me-1"></i> Số điện thoại
+                                </label>
+                                <input type="text" class="form-control form-control-custom"
+                                       th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'"
+                                       th:field="*{phone}" placeholder="Ví dụ: 0987654321" />
+                                <div class="invalid-feedback fw-bold" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Lỗi SĐT</div>
+                            </div>
+                        </div>
+
+                        <hr class="border-light my-5">
+
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                            <a th:href="@{/student/dashboard}" class="btn btn-light rounded-pill px-4 py-2 fw-medium shadow-sm">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow-sm" style="background: linear-gradient(135deg, #20B2AA 0%, #0F766E 100%); border: none;">
+                                <i class="bi bi-floppy me-2"></i> Lưu thay đổi
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

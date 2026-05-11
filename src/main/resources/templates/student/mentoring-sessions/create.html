@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/student-base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Đặt lịch cố vấn - Student Portal</title>
+</head>
+<body>
+
+<div th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+
+            <div class="card shadow-sm border-0 rounded-4 mt-4 hover-lift">
+
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-3 px-4 px-md-5">
+                    <h3 class="fw-bold text-dark mb-0 d-flex align-items-center">
+                        <i class="bi bi-calendar2-plus text-primary me-3 fs-2"></i>
+                        Đặt lịch cố vấn
+                    </h3>
+                    <p class="text-muted mt-2 mb-0">Vui lòng chọn theo thứ tự: Khoa/Ngành <i class="bi bi-arrow-right"></i> Giảng viên <i class="bi bi-arrow-right"></i> Thời gian.</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-0">
+
+                    <div th:if="${success}" class="alert alert-success bg-success bg-opacity-10 border-success border-opacity-25 text-success rounded-4 d-flex align-items-center mb-4 p-3 shadow-sm">
+                        <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                        <div th:text="${success}" class="fw-medium"></div>
+                    </div>
+
+                    <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger rounded-4 d-flex align-items-center mb-4 p-3 shadow-sm">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                        <div th:text="${error}" class="fw-medium"></div>
+                    </div>
+
+                    <form th:action="@{/student/mentoring-sessions/create}" method="post" th:object="${appointmentRequest}">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark mb-2">
+                                <i class="bi bi-building text-muted me-1"></i> Bước 1: Chọn Khoa/Ngành <span class="text-danger">*</span>
+                            </label>
+
+                            <select class="form-select form-select-lg rounded-3 bg-light border-0 shadow-sm" id="departmentSelect" required>
+                                <option value="">-- Chọn Khoa/Ngành trước --</option>
+                                <option th:each="dept : ${departments}"
+                                        th:value="${dept.id}"
+                                        th:text="${dept.name}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark mb-2">
+                                <i class="bi bi-person-badge text-muted me-1"></i> Bước 2: Chọn Giảng viên <span class="text-danger">*</span>
+                            </label>
+
+                            <select class="form-select form-select-lg rounded-3 bg-light border-0 shadow-sm" th:field="*{lecturerId}" id="lecturerSelect" required disabled>
+                                <option value="">-- Vui lòng chọn Khoa/Ngành ở trên --</option>
+
+                                <option th:each="lecturer : ${lecturers}"
+                                        th:value="${lecturer.id}"
+                                        th:data-dept="${lecturer.department != null ? lecturer.department.id : ''}"
+                                        th:text="${lecturer.profile != null ? lecturer.profile.fullName : lecturer.username}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark mb-2">
+                                <i class="bi bi-clock text-muted me-1"></i> Bước 3: Chọn ngày giờ <span class="text-danger">*</span>
+                            </label>
+                            <input type="datetime-local" class="form-control form-control-lg rounded-3 bg-light border-0 shadow-sm"
+                                   th:field="*{appointmentTime}" id="appointmentTime" required>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label fw-semibold text-dark mb-2">
+                                <i class="bi bi-pencil-square text-muted me-1"></i> Ghi chú mục đích buổi hẹn
+                            </label>
+                            <textarea class="form-control rounded-3 bg-light border-0 shadow-sm" rows="3" th:field="*{note}"></textarea>
+                        </div>
+
+                        <hr class="border-light mb-4">
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a th:href="@{/student/dashboard}" class="btn btn-light rounded-pill px-4 py-2 fw-medium shadow-sm me-md-2">
+                                Hủy bỏ
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-send-check me-2"></i> Gửi yêu cầu
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Chặn chọn ngày trong quá khứ ở giao diện (Bảo vệ lớp 1)
+            var now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('appointmentTime').min = now.toISOString().slice(0,16);
+
+            // 2. Logic Lọc Giảng viên theo Khoa
+            const deptSelect = document.getElementById('departmentSelect');
+            const lecturerSelect = document.getElementById('lecturerSelect');
+            // Lưu lại danh sách gốc
+            const lecturerOptions = Array.from(lecturerSelect.options);
+
+            deptSelect.addEventListener('change', function() {
+                const selectedDeptId = this.value;
+                lecturerSelect.innerHTML = ''; // Xóa sạch danh sách cũ
+                lecturerSelect.value = '';
+
+                if (selectedDeptId === '') {
+                    lecturerSelect.disabled = true;
+                    lecturerSelect.add(new Option('-- Vui lòng chọn Khoa/Ngành ở trên --', ''));
+                } else {
+                    lecturerSelect.disabled = false;
+                    lecturerSelect.add(new Option('-- Chọn giảng viên --', ''));
+
+                    let hasLecturer = false;
+                    lecturerOptions.forEach(opt => {
+                        if (opt.value !== '' && opt.getAttribute('data-dept') === selectedDeptId) {
+                            lecturerSelect.add(opt.cloneNode(true));
+                            hasLecturer = true;
+                        }
+                    });
+
+                    if (!hasLecturer) {
+                        lecturerSelect.options[0].text = "-- Khoa này hiện chưa có giảng viên --";
+                        lecturerSelect.disabled = true;
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>
