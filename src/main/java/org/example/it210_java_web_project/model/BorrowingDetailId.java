@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-@EqualsAndHashCode // 🔥 BẮT BUỘC CÓ CHO KHÓA CHÍNH KÉP
+@EqualsAndHashCode
 public class BorrowingDetailId implements Serializable {
 
     private Long recordId;

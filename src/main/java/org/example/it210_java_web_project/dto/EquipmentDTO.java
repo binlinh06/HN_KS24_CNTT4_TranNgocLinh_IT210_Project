@@ -26,8 +26,8 @@ public class EquipmentDTO {
     private String status;
 
     @NotNull(message = "Vui lòng chọn phân bổ Khoa/Ngành")
-    private Long departmentId; // Lưu ý: Ở DTO mình chỉ cần lấy ID
+    private Long departmentId;
 
     @NotNull(message = "Vui lòng chọn loại phòng Lab")
-    private Long labTypeId;    // Lưu ý: Ở DTO mình chỉ cần lấy ID
+    private Long labTypeId;
 }

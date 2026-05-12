@@ -51,7 +51,7 @@ public class TeacherDashboardController {
         model.addAttribute("sessions", sessions);
         model.addAttribute("stats", stats);
 
-        return "teacher/dashboard"; // Trỏ đúng tên file HTML của bạn
+        return "teacher/dashboard";
     }
 
     // XỬ LÝ NÚT CHẤP NHẬN YÊU CẦU
@@ -72,7 +72,7 @@ public class TeacherDashboardController {
     public String rejectSession(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
         try {
             User teacher = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
-            sessionService.updateSessionStatus(id, SessionStatus.CANCELLED, teacher); // Hoặc REJECTED tùy Enum của bạn
+            sessionService.updateSessionStatus(id, SessionStatus.CANCELLED, teacher);
             redirectAttributes.addFlashAttribute("success", "Đã từ chối ca tư vấn.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

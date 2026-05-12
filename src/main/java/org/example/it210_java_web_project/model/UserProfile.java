@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 public class UserProfile {
 
-    // 🌟 1. Khai báo một Interface để làm Nhóm (Group) kiểm tra
+    //  1. Khai báo một Interface để làm Nhóm (Group) kiểm tra
     public interface UpdateAction {}
 
     @Id
@@ -31,11 +31,11 @@ public class UserProfile {
     @NotBlank(message = "Họ tên không được để trống")
     private String fullName;
 
-    // 🌟 2. Gắn groups = UpdateAction.class (Chỉ bắt lỗi khi Cập nhật)
+    //  2. Gắn groups = UpdateAction.class (Chỉ bắt lỗi khi Cập nhật)
     @NotNull(groups = UpdateAction.class, message = "Vui lòng chọn ngày sinh")
     private LocalDate dob;
 
-    // 🌟 3. Gắn groups = UpdateAction.class (Chỉ bắt lỗi khi Cập nhật)
+    //  3. Gắn groups = UpdateAction.class (Chỉ bắt lỗi khi Cập nhật)
     @NotBlank(groups = UpdateAction.class, message = "Số điện thoại không được để trống")
     @Pattern(groups = UpdateAction.class, regexp = "^(0|\\+84)[3|5|7|8|9][0-9]{8}$", message = "Số điện thoại không đúng định dạng")
     private String phone;

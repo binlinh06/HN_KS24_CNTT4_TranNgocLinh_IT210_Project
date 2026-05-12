@@ -1,4 +1,4 @@
-package org.example.it210_java_web_project.service.impl;
+package org.example.it210_java_web_project.service.department.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.it210_java_web_project.model.Department;

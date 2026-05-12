@@ -34,8 +34,6 @@ public class MentoringSessionService {
             throw new RuntimeException("Không thể đặt lịch trong quá khứ!");
         }
 
-        // Đã sửa: Truyền danh sách trạng thái muốn loại trừ (CANCELLED) vào câu Query
-        // Dựa vào SessionStatus Enum hiện tại của bạn, chỉ có CANCELLED là trạng thái giải phóng slot
         List<SessionStatus> excludedStatuses = List.of(SessionStatus.CANCELLED);
 
         if (sessionRepository.existsConflictSchedule(lecturer, startTime, endTime, excludedStatuses)) {
@@ -158,7 +156,6 @@ public class MentoringSessionService {
             evaluationRepository.findById(s.getId()).ifPresent(dto::setEvaluation);
 
             borrowingRepository.findById(s.getId()).ifPresent(record -> {
-                // 🔥 THÊM DÒNG NÀY ĐỂ GẮN PHIẾU MƯỢN VÀO DTO
                 dto.setBorrowingRecord(record);
 
                 if (record.getDetails() != null) {

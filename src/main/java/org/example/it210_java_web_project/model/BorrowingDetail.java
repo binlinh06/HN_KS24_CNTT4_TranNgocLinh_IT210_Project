@@ -24,6 +24,6 @@ public class BorrowingDetail {
 
     private Integer quantity;
     @Enumerated(EnumType.STRING)
-    @Column(length = 50) // 🔥 Thêm dòng này để nới rộng cột trong DB
+    @Column(length = 50)
     private BorrowStatus status;
 }

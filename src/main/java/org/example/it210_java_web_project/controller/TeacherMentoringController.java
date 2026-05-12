@@ -35,7 +35,7 @@ public class TeacherMentoringController {
         // Lấy danh sách thiết bị
         List<Equipment> equipments = equipmentRepository.findAll();
 
-        // 🔥 QUAN TRỌNG: Nếu list bị null do database chưa khởi tạo, gán cho nó một cái List rỗng
+        // list bị null do database chưa khởi tạo, gán cho nó một cái List rỗng
         if (equipments == null) {
             equipments = new java.util.ArrayList<>();
         }

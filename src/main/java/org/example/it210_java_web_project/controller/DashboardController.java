@@ -21,8 +21,6 @@ public class DashboardController {
 
     private final MentoringSessionService mentoringSessionService;
     private final UserRepository userRepository;
-
-    // 🔥 THÊM DÒNG NÀY: Inject Repository của Phiếu mượn vào Controller
     private final BorrowingRecordRepository borrowingRepository;
 
     // ==========================================

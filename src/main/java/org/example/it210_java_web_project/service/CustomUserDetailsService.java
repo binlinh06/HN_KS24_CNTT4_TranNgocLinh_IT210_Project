@@ -29,7 +29,6 @@ public class CustomUserDetailsService
 
                 user.getUsername(),
 
-                // ⚠️ dùng passwordHash
                 user.getPasswordHash(),
 
                 List.of(

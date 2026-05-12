@@ -22,7 +22,7 @@ public class ProfileController {
     private final UserProfileService profileService;
     private final UserRepository userRepository;
 
-    // 🔥 HÀM MỞ GIAO DIỆN (Lúc nãy bị xóa mất)
+    //HÀM MỞ GIAO DIỆN
     @GetMapping
     public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
@@ -41,7 +41,7 @@ public class ProfileController {
         return "student/profile/form";
     }
 
-    // 🔥 HÀM CẬP NHẬT HỒ SƠ (Đã tích hợp Nhóm kiểm tra UpdateAction)
+    //HÀM CẬP NHẬT HỒ SƠ
     @PostMapping("/update")
     public String update(
             @Validated(UserProfile.UpdateAction.class) @ModelAttribute("profile") UserProfile profile,

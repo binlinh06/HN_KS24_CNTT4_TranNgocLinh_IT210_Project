@@ -1,4 +1,4 @@
-package org.example.it210_java_web_project.service;
+package org.example.it210_java_web_project.service.borrowing;
 
 import lombok.RequiredArgsConstructor;
 import org.example.it210_java_web_project.model.*;
@@ -37,7 +37,7 @@ public class BorrowingRecordService {
             // Lôgic cốt lõi: NẾU KHÔNG ĐỦ HÀNG TRONG KHO
             if (equipment.getQuantity() < requiredQuantity) {
                 // Fail-Fast: Quăng lỗi ngay lập tức. @Transactional sẽ nghe thấy và Rollback mọi thứ.
-                throw new RuntimeException("❌ XUẤT KHO THẤT BẠI: Thiết bị [" + equipment.getName() +
+                throw new RuntimeException("XUẤT KHO THẤT BẠI: Thiết bị [" + equipment.getName() +
                         "] chỉ còn " + equipment.getQuantity() + " chiếc trong kho, không đủ để cấp phát!");
             }
 

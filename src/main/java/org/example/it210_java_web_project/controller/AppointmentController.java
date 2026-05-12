@@ -20,7 +20,7 @@ public class AppointmentController {
 
     private final MentoringSessionService mentoringSessionService;
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository; // 🔥 ĐÃ THÊM: Tiêm Repository của Khoa
+    private final DepartmentRepository departmentRepository;
 
     @GetMapping("/create")
     public String showForm(Model model) {
@@ -54,7 +54,7 @@ public class AppointmentController {
             // NẾU THẤT BẠI: (Ví dụ chọn giờ trong quá khứ hoặc bị trùng giờ)
             model.addAttribute("error", e.getMessage());
 
-            // 🔥 QUAN TRỌNG: Phải nạp lại cả 2 danh sách này để giao diện không bị sập khi load lại
+            //Phải nạp lại cả 2 danh sách này để giao diện không bị sập khi load lại
             model.addAttribute("departments", departmentRepository.findAll());
             model.addAttribute("lecturers", userRepository.findByRoleName("LECTURER"));
 
