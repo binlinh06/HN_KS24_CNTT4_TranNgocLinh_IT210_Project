@@ -147,14 +147,20 @@ public class MentoringSessionService {
     @Transactional(readOnly = true)
     public List<AcademicProfileDTO> getStudentAcademicHistory(User student) {
         List<MentoringSession> history = sessionRepository
-                .findByStudentAndStatusOrderByStartTimeDesc(student, SessionStatus.DONE);
-
+                .findByStudentAndStatusInOrderByStartTimeDesc(
+                        student,
+                        List.of(SessionStatus.DONE, SessionStatus.CANCELLED, SessionStatus.REJECTED)
+                );
         List<AcademicProfileDTO> dtos = new ArrayList<>();
         for (MentoringSession s : history) {
             AcademicProfileDTO dto = new AcademicProfileDTO();
             dto.setSession(s);
             evaluationRepository.findById(s.getId()).ifPresent(dto::setEvaluation);
+
             borrowingRepository.findById(s.getId()).ifPresent(record -> {
+                // 🔥 THÊM DÒNG NÀY ĐỂ GẮN PHIẾU MƯỢN VÀO DTO
+                dto.setBorrowingRecord(record);
+
                 if (record.getDetails() != null) {
                     dto.setBorrowedEquipments(record.getDetails().stream().map(BorrowingDetail::getEquipment).toList());
                 }

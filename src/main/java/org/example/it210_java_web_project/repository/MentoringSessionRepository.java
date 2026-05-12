@@ -60,4 +60,6 @@ public interface MentoringSessionRepository extends JpaRepository<MentoringSessi
     List<MentoringSession> findByLecturerAndStatusInOrderByStartTimeAsc(User lecturer, List<SessionStatus> statuses);
 
     long countByLecturerAndStatus(User lecturer, SessionStatus status);
+    // Lấy lịch sử theo nhiều trạng thái (DONE, CANCELLED, REJECTED)
+    List<MentoringSession> findByStudentAndStatusInOrderByStartTimeDesc(User student, List<SessionStatus> statuses);
 }

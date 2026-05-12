@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 public class StudentMentoringController {
 
     private final UserRepository userRepository;
-    private final MentoringSessionService sessionService; // Đây là biến Service đã được tiêm vào
+    private final MentoringSessionService sessionService;
 
     // Hiển thị lịch sử ca tư vấn của sinh viên (CORE-07)
     @GetMapping("/student/history")
@@ -32,22 +30,5 @@ public class StudentMentoringController {
         model.addAttribute("profiles", historyProfiles);
 
         return "student/mentoring/history";
-    }
-
-    // 🔥 ĐÃ FIX LỖI STATIC: Gọi qua sessionService (viết thường)
-    // Sửa lại Mapping cho khớp với nút Hủy trên Dashboard
-    @GetMapping("/student/mentoring-sessions/cancel/{id}")
-    public String cancelSession(@PathVariable Long id,
-                                @AuthenticationPrincipal UserDetails userDetails,
-                                RedirectAttributes redirectAttributes) {
-        try {
-            // ✅ ĐÚNG: Gọi thông qua đối tượng 'sessionService'
-            sessionService.cancelSession(id, userDetails.getUsername());
-
-            redirectAttributes.addFlashAttribute("success", "Hủy lịch hẹn thành công. Khung giờ đã được giải phóng!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/student/dashboard";
     }
 }

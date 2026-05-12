@@ -55,4 +55,24 @@ public class BorrowingRecordService {
 
         borrowingRepository.save(record);
     }
+    // ========================================================
+    // TỪ CHỐI YÊU CẦU MƯỢN THIẾT BỊ (ADMIN)
+    // ========================================================
+    @Transactional
+    public void rejectRequest(Long recordId) {
+        // 1. Tìm phiếu mượn
+        BorrowingRecord record = borrowingRepository.findById(recordId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn này!"));
+
+        // 2. Kiểm tra trạng thái: Chỉ từ chối phiếu đang chờ xuất kho (APPROVED)
+        if (record.getStatus() != BorrowStatus.APPROVED) {
+            throw new RuntimeException("Chỉ có thể từ chối phiếu đang ở trạng thái Chờ xuất kho!");
+        }
+
+        // 3. Đổi trạng thái thành REJECTED (hoặc CANCELLED)
+        record.setStatus(BorrowStatus.REJECTED);
+
+        // 4. Lưu lại
+        borrowingRepository.save(record);
+    }
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout/student-base :: layout(~{::title}, ~{::content})">
+      th:replace="~{layout/student-base :: layout(~{::title}, ~{::content})}">
 <head>
     <title>Hồ sơ Học thuật | Mentor Portal</title>
 </head>
@@ -9,25 +9,26 @@
     <div class="container py-5">
         <div class="mb-5 border-bottom pb-3">
             <h2 class="fw-bold text-dark"><i class="bi bi-mortarboard-fill text-primary me-2"></i>Hồ sơ Học thuật Liên kết</h2>
-            <p class="text-muted">Xem lại toàn bộ lịch sử đánh giá năng lực và chi tiết mượn thiết bị của bạn.</p>
+            <p class="text-muted">Xem lại toàn bộ lịch sử ca tư vấn, đánh giá năng lực và chi tiết mượn thiết bị.</p>
         </div>
 
         <div th:if="${#lists.isEmpty(profiles)}" class="text-center py-5">
             <i class="bi bi-folder2-open text-muted opacity-25" style="font-size: 5rem;"></i>
             <h5 class="fw-bold mt-3">Hồ sơ trống</h5>
-            <p class="text-muted">Bạn chưa hoàn thành ca tư vấn nào để hiển thị hồ sơ.</p>
+            <p class="text-muted">Bạn chưa có lịch sử ca tư vấn nào.</p>
         </div>
 
         <div class="row g-4">
             <div class="col-12" th:each="profile : ${profiles}">
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden" th:classappend="${profile.session.status.name() == 'CANCELLED' or profile.session.status.name() == 'REJECTED'} ? 'opacity-75' : ''">
+
                     <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle me-3">
+                            <div class="p-3 rounded-circle me-3" th:classappend="${profile.session.status.name() == 'DONE'} ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary'">
                                 <i class="bi bi-calendar-check fs-4"></i>
                             </div>
                             <div>
-                                <h5 class="fw-bold mb-1">
+                                <h5 class="fw-bold mb-1" th:classappend="${profile.session.status.name() == 'CANCELLED' or profile.session.status.name() == 'REJECTED'} ? 'text-decoration-line-through text-muted' : ''">
                                     Ca tư vấn ngày <span th:text="${#temporals.format(profile.session.startTime, 'dd/MM/yyyy')}"></span>
                                 </h5>
                                 <div class="text-muted small">
@@ -35,12 +36,39 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
-                            <i class="bi bi-check-circle-fill me-1"></i> Đã hoàn thành
-                        </span>
+
+                        <div>
+                            <span th:if="${profile.session.status.name() == 'CANCELLED' or profile.session.status.name() == 'REJECTED'}"
+                                  class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-50 px-3 py-2 rounded-pill">
+                                <i class="bi bi-x-circle-fill me-1"></i>
+                                <span th:text="${profile.session.status.name() == 'CANCELLED' ? 'Đã hủy' : 'Giảng viên từ chối'}">Đã hủy</span>
+                            </span>
+
+                            <th:block th:if="${profile.session.status.name() == 'DONE'}">
+                                <span th:if="${profile.borrowingRecord == null}"
+                                      class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Đã hoàn thành
+                                </span>
+
+                                <span th:if="${profile.borrowingRecord != null and profile.borrowingRecord.status.name() == 'APPROVED'}"
+                                      class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-50 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-hourglass-split me-1"></i> Chờ Admin xuất kho
+                                </span>
+
+                                <span th:if="${profile.borrowingRecord != null and profile.borrowingRecord.status.name() == 'BORROWED'}"
+                                      class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-50 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-laptop me-1"></i> Đang mượn thiết bị
+                                </span>
+
+                                <span th:if="${profile.borrowingRecord != null and profile.borrowingRecord.status.name() == 'RETURNED'}"
+                                      class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-50 px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-all me-1"></i> Hoàn tất toàn bộ
+                                </span>
+                            </th:block>
+                        </div>
                     </div>
 
-                    <div class="card-body p-4 bg-light bg-opacity-50">
+                    <div th:if="${profile.session.status.name() == 'DONE'}" class="card-body p-4 bg-light bg-opacity-50">
                         <div class="row g-4">
                             <div class="col-md-7 border-end">
                                 <h6 class="fw-bold text-uppercase text-muted small mb-3">Đánh giá năng lực</h6>
@@ -54,9 +82,9 @@
                                             <span th:case="1">⭐ (Chưa đạt)</span>
                                         </span>
                                     </div>
-                                    <div class="bg-white p-3 rounded-3 border">
+                                    <div class="bg-white p-3 rounded-3 border shadow-sm">
                                         <p class="mb-0 text-dark" style="font-style: italic;" th:text="${profile.evaluation.comment}">
-                                            "Sinh viên làm bài tốt, cần cố gắng phần Database."
+                                            "Sinh viên làm bài tốt..."
                                         </p>
                                     </div>
                                 </div>
@@ -68,10 +96,9 @@
                             <div class="col-md-5">
                                 <h6 class="fw-bold text-uppercase text-muted small mb-3">Thiết bị cấp phát</h6>
                                 <div th:if="${#lists.isEmpty(profile.borrowedEquipments)}" class="text-muted small">
-                                    <i class="bi bi-dash-circle me-1"></i> Không có thiết bị nào được cấp trong ca này.
+                                    <i class="bi bi-dash-circle me-1"></i> Không có thiết bị nào được cấp.
                                 </div>
-                                <ul th:if="${!#lists.isEmpty(profile.borrowedEquipments)}" class="list-group list-group-flush rounded-3 border">
-
+                                <ul th:if="${!#lists.isEmpty(profile.borrowedEquipments)}" class="list-group list-group-flush rounded-3 border shadow-sm">
                                     <li class="list-group-item bg-white d-flex justify-content-between align-items-center p-3"
                                         th:each="equip : ${profile.borrowedEquipments}">
                                         <div class="d-flex align-items-center">
@@ -82,11 +109,17 @@
                                             </div>
                                         </div>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
                     </div>
+
+                    <div th:if="${profile.session.status.name() == 'CANCELLED' or profile.session.status.name() == 'REJECTED'}"
+                         class="card-body p-4 bg-light bg-opacity-25 text-center py-4">
+                        <i class="bi bi-slash-circle text-danger opacity-25 d-block mb-2" style="font-size: 2rem;"></i>
+                        <p class="text-muted small mb-0">Ca tư vấn này đã bị hủy nên không có dữ liệu học thuật.</p>
+                    </div>
+
                 </div>
             </div>
 

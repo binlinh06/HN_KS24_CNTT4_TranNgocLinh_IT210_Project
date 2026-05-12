@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -75,13 +76,20 @@ public class AuthWebController {
         return "auth/register";
     }
 
-    // ================= LOGIN =================
+// ================= LOGIN =================
 
     @GetMapping("/login")
     public String showLogin(
+            @RequestParam(value = "error", required = false) String error, // Hứng tham số ?error
             Model model
     ) {
         model.addAttribute("loginRequest", new LoginRequest());
+
+        // Nếu URL có chữ ?error, đẩy câu thông báo tiếng Việt xuống HTML
+        if (error != null) {
+            model.addAttribute("error", "Tài khoản hoặc mật khẩu không chính xác!");
+        }
+
         return "auth/login";
     }
 

@@ -4,5 +4,6 @@ public enum SessionStatus {
     PENDING,
     APPROVED,
     CANCELLED,
-    DONE
+    DONE,
+    REJECTED
 }

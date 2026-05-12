@@ -178,9 +178,15 @@
     <div class="right">
         <form th:action="@{/auth/login}" method="post" th:object="${loginRequest}">
 
-            <div th:if="${error}" id="login-alert" class="alert alert-danger alert-dismissible fade show">
+            <div th:if="${error}" class="custom-alert alert alert-danger alert-dismissible fade show" style="position: fixed; top: 20px; right: 20px; z-index: 9999; border-left: 5px solid #dc3545; animation: slideIn 0.4s ease;">
                 <strong th:text="${error}"></strong>
             </div>
+
+            <div th:if="${success}" class="custom-alert alert alert-success alert-dismissible fade show" style="position: fixed; top: 20px; right: 20px; z-index: 9999; border-left: 5px solid #198754; animation: slideIn 0.4s ease;">
+                <strong th:text="${success}"></strong>
+            </div>
+
+            <div class="input-group">
 
             <div class="input-group">
                 <input type="text" th:field="*{username}" required>
@@ -205,13 +211,14 @@
 </div>
 
 <script>
-    const alertElement = document.getElementById('login-alert');
-    if (alertElement) {
+    // Tìm tất cả các alert có class 'custom-alert'
+    const alerts = document.querySelectorAll('.custom-alert');
+    alerts.forEach(alertElement => {
         setTimeout(() => {
             alertElement.classList.remove('show');
-            setTimeout(() => alertElement.remove(), 400);
+            setTimeout(() => alertElement.remove(), 400); // Đợi animation mờ dần rồi xóa hẳn
         }, 3000);
-    }
+    });
 </script>
 
 </body>
