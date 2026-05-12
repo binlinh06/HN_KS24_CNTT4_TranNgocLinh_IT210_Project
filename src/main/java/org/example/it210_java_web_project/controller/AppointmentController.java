@@ -66,16 +66,18 @@ public class AppointmentController {
     @GetMapping("/cancel/{id}")
     public String cancelAppointment(
             @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetails userDetails, // Đã có sẵn username ở đây
             RedirectAttributes redirectAttributes
     ) {
         try {
-            // Chỉ sinh viên tạo ra lịch này mới được quyền hủy
-            User student = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
-            mentoringSessionService.cancelSession(id, student);
+            // KHÔNG CẦN: User student = userRepository.findByUsername(...);
+
+            // TRUYỀN THẲNG: userDetails.getUsername() vào Service
+            mentoringSessionService.cancelSession(id, userDetails.getUsername());
 
             redirectAttributes.addFlashAttribute("success", "Đã hủy lịch hẹn thành công!");
         } catch (Exception e) {
+            // Nếu quá 24h hoặc không phải chủ sở hữu, lỗi sẽ hiện ở đây
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/student/dashboard";

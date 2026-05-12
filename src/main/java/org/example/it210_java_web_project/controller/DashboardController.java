@@ -1,8 +1,10 @@
 package org.example.it210_java_web_project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.it210_java_web_project.model.BorrowingRecord;
 import org.example.it210_java_web_project.model.MentoringSession;
 import org.example.it210_java_web_project.model.User;
+import org.example.it210_java_web_project.repository.BorrowingRecordRepository;
 import org.example.it210_java_web_project.repository.UserRepository;
 import org.example.it210_java_web_project.service.mentoringsesion.MentoringSessionService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,11 +22,20 @@ public class DashboardController {
     private final MentoringSessionService mentoringSessionService;
     private final UserRepository userRepository;
 
+    // 🔥 THÊM DÒNG NÀY: Inject Repository của Phiếu mượn vào Controller
+    private final BorrowingRecordRepository borrowingRepository;
+
     // ==========================================
     // 1. DASHBOARD ADMIN
     // ==========================================
     @GetMapping("/admin/dashboard")
-    public String adminDashboard() {
+    public String adminDashboard(Model model) { // Thêm Model vào tham số
+        // Lấy danh sách phiếu mượn từ Database
+        List<BorrowingRecord> recentRecords = borrowingRepository.findAll();
+
+        // Đẩy dữ liệu lên giao diện với tên biến "recentRequests" (khớp với HTML)
+        model.addAttribute("recentRequests", recentRecords);
+
         return "admin/dashboard";
     }
 

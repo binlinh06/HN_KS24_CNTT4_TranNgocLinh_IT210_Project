@@ -2,7 +2,7 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="layout/teacher-base :: layout(~{::title}, ~{::content})">
 <head>
-    <title>Đánh giá năng lực & Cấp thiết bị</title>
+    <title>Đánh giá năng lực & Đề xuất thiết bị</title>
 </head>
 <body>
 <div th:fragment="content">
@@ -24,16 +24,24 @@
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="eval-card shadow-sm p-4 p-md-5">
+            <div class="eval-card shadow-sm p-4 p-md-5 mb-5">
 
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Báo cáo đánh giá ca tư vấn</h4>
-                        <p class="text-muted small mb-0">Mã ca: #<span th:text="${mentoringSession.id}"></span> | Sinh viên: <strong th:text="${mentoringSession.student.profile.fullName}">Nguyễn Văn A</strong></p>
+                        <h4 class="fw-bold text-dark mb-1">Báo cáo đánh giá & Đề xuất thiết bị</h4>
+                        <p class="text-muted small mb-0">
+                            Mã ca: #<span th:text="${mentoringSession.id}"></span> |
+                            Sinh viên: <strong th:text="${mentoringSession.student.profile != null ? mentoringSession.student.profile.fullName : mentoringSession.student.username}">Nguyễn Văn A</strong>
+                        </p>
                     </div>
                     <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
-                        <i class="bi bi-file-earmark-check fs-4"></i>
+                        <i class="bi bi-clipboard-check fs-4"></i>
                     </div>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger border-0 shadow-sm rounded-3 mb-4 d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill fs-5 me-3"></i>
+                    <span th:text="${error}"></span>
                 </div>
 
                 <form th:action="@{/teacher/mentoring/evaluate/{id}(id=${mentoringSession.id})}" method="post">
@@ -57,19 +65,24 @@
 
                     <div class="mb-5">
                         <label class="form-label fw-bold small text-uppercase text-muted mb-3 d-flex justify-content-between">
-                            <span>Chỉ định thiết bị / Tài liệu (Tùy chọn)</span>
+                            <span>Chỉ định thiết bị (Phiếu sẽ chuyển đến Admin phòng Lab xuất kho)</span>
                             <span class="text-primary"><i class="bi bi-laptop"></i> Kho lưu trữ</span>
                         </label>
 
-                        <div class="row g-3">
-                            <div class="col-md-6" th:each="eq : ${equipments}">
+                        <div th:if="${#lists.isEmpty(equipments)}" class="bg-light border border-dashed rounded-4 p-4 text-center">
+                            <i class="bi bi-box-seam text-muted opacity-50" style="font-size: 2.5rem;"></i>
+                            <p class="text-muted small mt-2 mb-0">Hệ thống chưa có dữ liệu thiết bị thực hành.<br>Thầy/Cô có thể bỏ qua bước này và tiếp tục lưu.</p>
+                        </div>
+
+                        <div th:if="${!#lists.isEmpty(equipments)}" class="row g-3">
+                            <div class="col-md-6" th:each="equip : ${equipments}">
                                 <input type="checkbox" class="eq-checkbox" name="equipmentIds"
-                                       th:id="'eq-' + ${eq.id}" th:value="${eq.id}">
-                                <label class="eq-label w-100 h-100 d-flex justify-content-between align-items-center" th:for="'eq-' + ${eq.id}">
+                                       th:id="'equip-' + ${equip.id}" th:value="${equip.id}">
+                                <label class="eq-label w-100 h-100 d-flex justify-content-between align-items-center" th:for="'equip-' + ${equip.id}">
                                     <div>
-                                        <div class="fw-bold text-dark mb-1" th:text="${eq.name}">Oscilloscope GDS</div>
+                                        <div class="fw-bold text-dark mb-1" th:text="${equip.name}">Tên thiết bị</div>
                                         <div class="text-muted" style="font-size: 0.7rem;">
-                                            <i class="bi bi-geo-alt me-1"></i> <span th:text="${eq.labRoom}">Phòng Lab</span>
+                                            <i class="bi bi-geo-alt me-1"></i> <span th:text="${equip.labType != null ? equip.labType.name : 'Chưa phân bổ phòng'}">Phòng Lab</span>
                                         </div>
                                     </div>
                                     <i class="bi bi-check-circle-fill fs-4 text-muted opacity-25 icon-check transition-all"></i>
@@ -78,10 +91,10 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                    <div class="d-flex justify-content-end gap-3 pt-4 border-top">
                         <a th:href="@{/teacher/dashboard}" class="btn btn-light rounded-pill px-4 fw-bold shadow-sm">Hủy bỏ</a>
                         <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">
-                            <i class="bi bi-floppy me-2"></i> Lưu đánh giá & Hoàn thành
+                            <i class="bi bi-send-check me-2"></i> Lưu & Gửi yêu cầu xuất kho
                         </button>
                     </div>
 

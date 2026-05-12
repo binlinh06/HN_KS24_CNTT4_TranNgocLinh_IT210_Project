@@ -5,155 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Quản Lý Thiết Bị Thực Hành</title>
 
-    <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #20B2AA;     /* Light Sea Green */
+            --primary: #20B2AA;
             --primary-light: #81D4FA;
-            --accent: #0F766E;      /* Deep teal */
+            --accent: #0F766E;
             --sidebar-bg: #0F172A;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #20B2AA 0%, #0F766E 100%);
-            box-shadow: 0 4px 20px rgba(32, 178, 170, 0.3);
-        }
-
-        .brand-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,0.95) !important;
-            font-weight: 500;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover {
-            background-color: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-
-        .btn-logout {
-            background-color: #EF4444;
-            border: none;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .btn-logout:hover {
-            background-color: #DC2626;
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        .sidebar {
-            background-color: var(--sidebar-bg);
-            min-height: calc(100vh - 76px);
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-        }
-
-        .sidebar .nav-link {
-            color: #CBD5E1;
-            padding: 12px 20px;
-            margin: 4px 8px;
-            border-radius: 10px;
-        }
-
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background-color: #1E2937;
-            color: white;
-        }
-
-        .main-content {
-            padding: 2rem;
-        }
-
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(32, 178, 170, 0.15);
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #20B2AA, #0F766E);
-            color: white;
-        }
-
-        .table thead {
-            background-color: #F1F5F9;
-        }
-
-        .badge {
-            font-weight: 500;
-            padding: 6px 12px;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .navbar { background: linear-gradient(135deg, #20B2AA 0%, #0F766E 100%); box-shadow: 0 4px 20px rgba(32, 178, 170, 0.3); }
+        .brand-title { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
+        .nav-link { color: rgba(255,255,255,0.95) !important; font-weight: 500; padding: 0.75rem 1.25rem; border-radius: 8px; transition: all 0.3s; }
+        .nav-link:hover { background-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .btn-logout { background-color: #EF4444; border: none; font-weight: 600; text-decoration: none; }
+        .btn-logout:hover { background-color: #DC2626; transform: translateY(-2px); color: white; }
+        .sidebar { background-color: var(--sidebar-bg); min-height: calc(100vh - 76px); box-shadow: 2px 0 15px rgba(0,0,0,0.1); }
+        .sidebar .nav-link { color: #CBD5E1; padding: 12px 20px; margin: 4px 8px; border-radius: 10px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: #1E2937; color: white; }
+        .main-content { padding: 2rem; }
+        .card { border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(32, 178, 170, 0.15); }
+        .stat-card { background: linear-gradient(135deg, #20B2AA, #0F766E); color: white; }
+        .table thead { background-color: #F1F5F9; }
+        .badge { font-weight: 500; padding: 6px 12px; }
     </style>
 </head>
 <body>
 
-<!-- Top Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark py-3">
     <div class="container-fluid">
-        <!-- Left: Title -->
         <a class="navbar-brand d-flex align-items-center" href="#">
             <i class="bi bi-shield-lock-fill me-2" style="font-size: 2rem;"></i>
             <span class="brand-title">ADMIN</span>
         </a>
 
-        <!-- Right: Menu -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-2">
+                <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-door-open me-1"></i> Loại phòng Lab</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-building me-1"></i> Khoa / Ngành</a></li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-door-open me-1"></i>
-                        Loại phòng Lab
+                    <a class="nav-link position-relative" th:href="@{/admin/borrowing/list}">
+                        <i class="bi bi-clipboard-check me-1"></i> Duyệt yêu cầu mượn
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">!</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-building me-1"></i>
-                        Khoa / Ngành
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link position-relative" href="#">
-                        <i class="bi bi-clipboard-check me-1"></i>
-                        Duyệt yêu cầu mượn
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">12</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin/equipment}">
-                        <i class="bi bi-laptop me-1"></i>
-                        Quản lý thiết bị
-                    </a>
-                </li>
-
-                <!-- User info + Logout -->
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/equipment}"><i class="bi bi-laptop me-1"></i> Quản lý thiết bị</a></li>
                 <li class="nav-item ms-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="text-end">
@@ -171,152 +71,106 @@
 </nav>
 
 <div class="d-flex">
-    <!-- Sidebar -->
     <div class="sidebar col-lg-2 py-4">
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="#"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-grid-3x3-gap me-2"></i> Loại phòng Lab</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-diagram-3 me-2"></i> Khoa / Ngành</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-arrow-left-right me-2"></i> Yêu cầu mượn thiết bị</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/admin/equipment}"><i class="bi bi-pc-display me-2"></i> Thiết bị thực hành</a>
-            </li>
-            <li class="nav-item mt-4">
-                <a class="nav-link" href="#"><i class="bi bi-people me-2"></i> Người dùng</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-journal-text me-2"></i> Báo cáo</a>
-            </li>
-            <li class="nav-item mt-auto pt-5">
-                <a class="nav-link text-danger" href="#">
-                    <i class="bi bi-gear me-2"></i> Cài đặt hệ thống
-                </a>
-            </li>
+            <li class="nav-item"><a class="nav-link active" th:href="@{/admin/dashboard}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-grid-3x3-gap me-2"></i> Loại phòng Lab</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-diagram-3 me-2"></i> Khoa / Ngành</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/borrowing/list}"><i class="bi bi-arrow-left-right me-2"></i> Yêu cầu mượn thiết bị</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/equipment}"><i class="bi bi-pc-display me-2"></i> Thiết bị thực hành</a></li>
+            <li class="nav-item mt-4"><a class="nav-link" href="#"><i class="bi bi-people me-2"></i> Người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-journal-text me-2"></i> Báo cáo</a></li>
+            <li class="nav-item mt-auto pt-5"><a class="nav-link text-danger" href="#"><i class="bi bi-gear me-2"></i> Cài đặt hệ thống</a></li>
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content flex-grow-1">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold text-dark">Dashboard Tổng quan</h2>
             <div class="d-flex gap-3">
-                <button class="btn btn-outline-secondary">
-                    <i class="bi bi-calendar me-2"></i> Hôm nay
-                </button>
-                <button class="btn btn-primary" style="background-color: var(--primary); border: none;">
-                    <i class="bi bi-plus-lg me-2"></i> Thêm mới
-                </button>
+                <button class="btn btn-outline-secondary"><i class="bi bi-calendar me-2"></i> Hôm nay</button>
             </div>
         </div>
 
-        <!-- Stats -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
         <div class="row g-4 mb-5">
-            <div class="col-xl-3 col-md-6">
-                <div class="card stat-card h-100 p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="opacity-75">Thiết bị</h6>
-                            <h2 class="fw-bold mb-0">248</h2>
-                        </div>
-                        <i class="bi bi-laptop fs-1 opacity-75"></i>
-                    </div>
-                    <small class="mt-3 d-block">+12 so với tuần trước</small>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card h-100 p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="text-muted">Yêu cầu đang chờ</h6>
-                            <h2 class="fw-bold text-warning mb-0">18</h2>
-                        </div>
-                        <i class="bi bi-hourglass-split fs-1 text-warning"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card h-100 p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="text-muted">Phòng Lab</h6>
-                            <h2 class="fw-bold mb-0">42</h2>
-                        </div>
-                        <i class="bi bi-door-open fs-1 text-info"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card h-100 p-4">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="text-muted">Khoa / Ngành</h6>
-                            <h2 class="fw-bold mb-0">12</h2>
-                        </div>
-                        <i class="bi bi-building fs-1 text-success"></i>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Recent Requests -->
         <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-            <div class="card-header bg-white border-bottom-0 py-4">
-                <h5 class="mb-0 fw-semibold text-dark">Yêu cầu mượn thiết bị gần đây</h5>
+            <div class="card-header bg-white border-bottom-0 py-4 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold text-dark">Yêu cầu xuất kho gần đây</h5>
+                <a th:href="@{/admin/borrowing/list}" class="btn btn-sm btn-light border fw-medium text-secondary">
+                    Xem tất cả <i class="bi bi-arrow-right ms-1"></i>
+                </a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
                         <tr>
-                            <th class="ps-4 py-3">Mã yêu cầu</th>
+                            <th class="ps-4 py-3">Mã phiếu</th>
                             <th class="py-3">Sinh viên</th>
-                            <th class="py-3">Thiết bị</th>
-                            <th class="py-3">Phòng</th>
-                            <th class="py-3">Thời gian</th>
+                            <th class="py-3 text-center">SL thiết bị</th>
+                            <th class="py-3">Ngày tạo</th>
                             <th class="py-3">Trạng thái</th>
                             <th class="text-end pe-4 py-3">Hành động</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="req : ${recentRequests}">
-                            <td class="ps-4"><strong class="text-primary" th:text="${'#YQ-' + req.id}"></strong></td>
-
-                            <td class="fw-medium text-dark" th:text="${req.studentName}"></td>
-
-                            <td th:text="${req.equipment?.name}"></td>
-
-                            <td th:text="${req.labRoom?.name}"></td>
-
-                            <td th:text="${#temporals.format(req.borrowDate, 'dd/MM/yyyy')}"></td>
-
+                            <td class="ps-4"><strong class="text-primary" th:text="${'#PM-' + req.sessionId}"></strong></td>
+                            <td class="fw-medium text-dark" th:text="${req.student.profile != null ? req.student.profile.fullName : req.student.username}"></td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill border" th:text="${#lists.size(req.details)}"></span>
+                            </td>
+                            <td class="text-muted small" th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
                                 <span class="badge px-2 py-1"
-                                      th:classappend="${req.status == 'PENDING'} ? 'bg-warning text-dark' : (${req.status == 'APPROVED'} ? 'bg-success' : 'bg-danger')"
-                                      th:text="${req.status == 'PENDING'} ? 'Chờ duyệt' : (${req.status == 'APPROVED'} ? 'Đã duyệt' : 'Từ chối')">
+                                      th:classappend="${req.status.name() == 'APPROVED'} ? 'bg-warning text-dark' :
+                                                     (${req.status.name() == 'BORROWED'} ? 'bg-info text-dark' :
+                                                     (${req.status.name() == 'RETURNED'} ? 'bg-success' : 'bg-danger'))"
+                                      th:text="${req.status.name() == 'APPROVED'} ? 'Chờ xuất kho' :
+                                              (${req.status.name() == 'BORROWED'} ? 'Đang mượn' :
+                                              (${req.status.name() == 'RETURNED'} ? 'Đã trả' : 'Đã hủy'))">
                                 </span>
                             </td>
-
                             <td class="text-end pe-4">
-                                <div th:if="${req.status == 'PENDING'}">
-                                    <a th:href="@{/admin/requests/approve/{id}(id=${req.id})}" class="btn btn-sm btn-success shadow-sm me-1">Duyệt</a>
-                                    <a th:href="@{/admin/requests/reject/{id}(id=${req.id})}" class="btn btn-sm btn-outline-danger shadow-sm">Từ chối</a>
+                                <div th:if="${req.status.name() == 'APPROVED'}" class="d-flex justify-content-end gap-2">
+                                    <form th:action="@{/admin/borrowing/export/{id}(id=${req.sessionId})}" method="post" class="m-0">
+                                        <button type="submit" class="btn btn-sm text-white shadow-sm"
+                                                onclick="return confirm('Xác nhận xuất kho cho phiếu mượn này?');"
+                                                style="background-color: var(--primary); border: none;">
+                                            <i class="bi bi-box-arrow-up me-1"></i> Xác nhận
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/admin/borrowing/reject/{id}(id=${req.sessionId})}" method="post" class="m-0">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm"
+                                                onclick="return confirm('Bạn có chắc chắn muốn TỪ CHỐI phiếu xuất kho này?');">
+                                            <i class="bi bi-x-circle me-1"></i> Từ chối
+                                        </button>
+                                    </form>
                                 </div>
-                                <span th:unless="${req.status == 'PENDING'}" class="text-muted small">Đã xử lý</span>
+
+                                <div th:unless="${req.status.name() == 'APPROVED'}">
+                                    <a th:href="@{/admin/borrowing/list}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 shadow-sm">
+                                        <i class="bi bi-eye me-1"></i> Chi tiết
+                                    </a>
+                                </div>
                             </td>
                         </tr>
 
                         <tr th:if="${#lists.isEmpty(recentRequests)}">
-                            <td colspan="7" class="text-center py-5 text-muted">
+                            <td colspan="6" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
-                                <h6 class="fw-medium">Chưa có yêu cầu mượn nào gần đây</h6>
+                                <h6 class="fw-medium">Chưa có phiếu mượn nào cần xử lý</h6>
                             </td>
                         </tr>
                         </tbody>
@@ -328,13 +182,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Active sidebar link
-    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-        if (link.textContent.includes('Dashboard')) {
-            link.classList.add('active');
-        }
-    });
-</script>
 </body>
 </html>

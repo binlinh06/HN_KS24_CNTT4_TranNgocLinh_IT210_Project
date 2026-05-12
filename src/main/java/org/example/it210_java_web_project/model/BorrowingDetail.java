@@ -14,6 +14,7 @@ public class BorrowingDetail {
     @ManyToOne
     @MapsId("recordId")
     @JoinColumn(name = "record_id")
+
     private BorrowingRecord record;
 
     @ManyToOne
@@ -22,4 +23,7 @@ public class BorrowingDetail {
     private Equipment equipment;
 
     private Integer quantity;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50) // 🔥 Thêm dòng này để nới rộng cột trong DB
+    private BorrowStatus status;
 }

@@ -275,7 +275,9 @@
                                class="btn btn-evaluate d-inline-flex align-items-center bg-primary border-primary">
                                 <i class="bi bi-pencil-square me-2"></i> Tiếp nhận & Đánh giá
                             </a>
-                            <a th:href="@{/teacher/mentoring/reject/{id}(id=${appt.id})}" class="btn-action btn-reject" title="Từ chối">
+                            <a th:href="@{/teacher/mentoring/reject/{id}(id=${appt.id})}"
+                               class="btn-action btn-reject" title="Từ chối"
+                               onclick="return confirm('Thầy/Cô có chắc chắn muốn từ chối ca tư vấn này?');">
                                 <i class="bi bi-x-lg"></i>
                             </a>
                         </div>

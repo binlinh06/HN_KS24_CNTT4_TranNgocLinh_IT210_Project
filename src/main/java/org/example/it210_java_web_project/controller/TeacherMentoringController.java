@@ -1,6 +1,7 @@
 package org.example.it210_java_web_project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.it210_java_web_project.model.Equipment;
 import org.example.it210_java_web_project.model.MentoringSession;
 import org.example.it210_java_web_project.model.User;
 import org.example.it210_java_web_project.repository.EquipmentRepository;
@@ -31,9 +32,17 @@ public class TeacherMentoringController {
     public String showEvaluateForm(@PathVariable Long id, Model model) {
         MentoringSession session = sessionRepository.findById(id).orElseThrow();
 
-        // 🔥 ĐỔI TÊN BIẾN TẠI ĐÂY:
+        // Lấy danh sách thiết bị
+        List<Equipment> equipments = equipmentRepository.findAll();
+
+        // 🔥 QUAN TRỌNG: Nếu list bị null do database chưa khởi tạo, gán cho nó một cái List rỗng
+        if (equipments == null) {
+            equipments = new java.util.ArrayList<>();
+        }
+
         model.addAttribute("mentoringSession", session);
-        model.addAttribute("equipments", equipmentRepository.findAll());
+        model.addAttribute("equipments", equipments); // Đẩy cái list (dù rỗng hay đầy) xuống View
+
         return "teacher/mentoring/evaluate";
     }
 
